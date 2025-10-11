@@ -1,4 +1,5 @@
 import "dotenv/config";
+// import dotenv from "dotenv";
 import express, { NextFunction, Request, Response } from "express";
 import notesRoutes from "./routes/notes";
 import userRoutes from "./routes/users";
@@ -8,13 +9,35 @@ import session from "express-session";
 import env from "./util/validateEnv";
 import MongoStore from "connect-mongo";
 import { requiresAuth } from "./middleware/auth";
+import cors from "cors";
+
+// dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 
 const app = express();
+
+console.log("process.env.NODE_ENV: " + process.env.NODE_ENV);
+console.log("process.env.REACT_APP_MONOREPO_FRONTEND_URL: " + process.env.REACT_APP_MONOREPO_FRONTEND_URL);
+console.log("env.SESSION_SECRET", env.SESSION_SECRET);
+
+const corsOptions = {
+    origin: [env.REACT_APP_MONOREPO_FRONTEND_URL, 'http://localhost:3000'], // Allow requests only from these origins
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // Allow cookies, if your application uses them
+    optionsSuccessStatus: 204,
+    // headers: 'Content-Type, Authorization, Content-Length, X-Requested-With',
+};
+
+
+app.use(cors(corsOptions));
+// app.use(cors());
 
 app.use(morgan("dev"));
 
 app.use(express.json());
 
+
+
+// Cookies stop working as soon as we stop using the localhost domain
 app.use(session({
     secret: env.SESSION_SECRET,
     resave: false,
@@ -30,6 +53,7 @@ app.use(session({
 
 app.use("/api/users", userRoutes);
 app.use("/api/notes", requiresAuth, notesRoutes);
+// app.use("/api/notes", notesRoutes);
 
 app.use((req, res, next) => {
     next(createHttpError(404, "Endpoint not found"));
