@@ -56,6 +56,7 @@ const corsOptions = {
     origin: [env.REACT_APP_MONOREPO_FRONTEND_URL, 'http://localhost:3000'], // Allow requests only from these origins
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // Allow cookies, if your application uses them
+    withCredentials: true,
     optionsSuccessStatus: 204,
     // headers: 'Content-Type, Authorization, Content-Length, X-Requested-With',
 };
