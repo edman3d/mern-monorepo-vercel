@@ -18,8 +18,6 @@ console.log("process.env.REACT_APP_MONOREPO_FRONTEND_URL: " + process.env.REACT_
 console.log("env.SESSION_SECRET", env.SESSION_SECRET);
 console.log("env.MONGODB_URI", env.MONGODB_URI);
 
-const port = env.PORT;
-
 console.log('trying to connect to mongo at: ' + env.MONGODB_URI);
 
 mongoose.connect(env.MONGODB_URI)
@@ -74,5 +72,9 @@ app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
 });
 
 console.log('post 500 middleware');
+
+app.listen(env.PORT, () => {
+    console.log(`Server running on port ${env.PORT}`);
+});
 
 export default app;
