@@ -80,24 +80,8 @@ import env from "./util/validateEnv";
 
 // Use "type: module" in package.json to use ES modules
 import express from 'express';
-import mongoose from "mongoose";
 const app = express();
 
-const port = env.PORT;
-
-console.log('trying to connect to mongo at: ' + env.MONGODB_URI);
-
-mongoose.connect(env.MONGODB_URI)
-    .then(() => {
-        console.log("Mongoose connected");
-        app.listen(port, () => {
-            console.log("Server running on port: " + port);
-        });
-    })
-    .catch(console.error);
-
-
-console.log('post-connection hello');
 
 // Define your routes
 app.get('/', (req, res) => {
