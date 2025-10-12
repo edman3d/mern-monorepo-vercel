@@ -73,9 +73,13 @@ console.log('session middleware configured');
 app.get('/', (req, res) => {
     res.send('Hello from Vercel Express Mongoose!');
 });
+
+// Send the favicon files
 app.get('/favicon.png', (req, res) => {
-    // Send the favicon file
     res.sendFile(path.join(__dirname, 'public', 'favicon.png'));
+});
+app.get('/favicon.ico', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'favicon.ico'));
 });
 
 app.use("/api/users", userRoutes);
