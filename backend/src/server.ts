@@ -50,7 +50,7 @@ const corsOptions = {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // Allow cookies, if your application uses them
     optionsSuccessStatus: 204,
-    // headers: 'Content-Type, Authorization, Content-Length, X-Requested-With',
+    headers: 'Content-Type, Authorization, Content-Length, X-Requested-With',
 };
 console.log('CORS origins: ', corsOptions.origin.join(', '));
 app.use(cors(corsOptions));
