@@ -6,7 +6,7 @@
 // import morgan from "morgan";
 // import createHttpError, { isHttpError } from "http-errors";
 // import session from "express-session";
-// import env from "./util/validateEnv";
+import env from "./util/validateEnv";
 // import MongoStore from "connect-mongo";
 // import { requiresAuth } from "./middleware/auth";
 // import cors from "cors";
@@ -80,12 +80,29 @@
 
 // Use "type: module" in package.json to use ES modules
 import express from 'express';
+import mongoose from "mongoose";
 const app = express();
 
 // Define your routes
 app.get('/', (req, res) => {
     res.json({ message: 'Hello from Express on Vercel!' });
 });
+
+const port = env.PORT;
+
+console.log('trying to connect to mongo at: ' + env.MONGODB_URI);
+
+mongoose.connect(env.MONGODB_URI)
+    .then(() => {
+        console.log("Mongoose connected");
+        app.listen(port, () => {
+            console.log("Server running on port: " + port);
+        });
+    })
+    .catch(console.error);
+
+
+console.log('post-connection hello');
 
 // Export the Express app
 export default app;
