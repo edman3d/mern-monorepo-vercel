@@ -16,6 +16,7 @@ const app = express();
 console.log("process.env.NODE_ENV: " + process.env.NODE_ENV);
 console.log("process.env.REACT_APP_MONOREPO_FRONTEND_URL: " + process.env.REACT_APP_MONOREPO_FRONTEND_URL);
 console.log("env.SESSION_SECRET", env.SESSION_SECRET);
+console.log("env.MONGODB_URI", env.MONGODB_URI);
 
 const corsOptions = {
     origin: [env.REACT_APP_MONOREPO_FRONTEND_URL, 'http://localhost:3000'], // Allow requests only from these origins
@@ -24,6 +25,8 @@ const corsOptions = {
     optionsSuccessStatus: 204,
     // headers: 'Content-Type, Authorization, Content-Length, X-Requested-With',
 };
+
+console.log('CORS origins: ', corsOptions.origin.join(', '));
 
 
 app.use(cors(corsOptions));
@@ -47,6 +50,8 @@ app.use(session({
     }),
 }));
 
+console.log('session middleware configured');
+
 app.use("/api/users", userRoutes);
 // app.use("/api/notes", requiresAuth, notesRoutes);
 app.use("/api/notes", notesRoutes);
@@ -54,6 +59,8 @@ app.use("/api/notes", notesRoutes);
 app.use((req, res, next) => {
     next(createHttpError(404, "Endpoint not found"));
 });
+
+console.log('post 404 middleware');
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
@@ -66,5 +73,7 @@ app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
     }
     res.status(statusCode).json({ error: errorMessage });
 });
+
+console.log('post 500 middleware');
 
 export default app;
