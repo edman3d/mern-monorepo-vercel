@@ -5,7 +5,7 @@ import NoteModel from "../models/note";
 import { assertIsDefined } from "../util/assertIsDefined";
 
 export const getNotes: RequestHandler = async (req, res, next) => {
-    console.log(req.session);
+    // console.log(req.session);
     const authenticatedUserId = req.session.userId;
 
     try {
@@ -35,9 +35,9 @@ export const getNote: RequestHandler = async (req, res, next) => {
             throw createHttpError(404, "Note not found");
         }
 
-        // if (!note.userId.equals(authenticatedUserId)) {
-        //     throw createHttpError(401, "You cannot access this note");
-        // }
+        if (!note.userId.equals(authenticatedUserId)) {
+            throw createHttpError(401, "You cannot access this note");
+        }
 
         res.status(200).json(note);
     } catch (error) {
@@ -53,18 +53,18 @@ interface CreateNoteBody {
 export const createNote: RequestHandler<unknown, unknown, CreateNoteBody, unknown> = async (req, res, next) => {
     const title = req.body.title;
     const text = req.body.text;
-    // const authenticatedUserId = req.session.userId; // crashes the entire app.. seriously bro..
+    const authenticatedUserId = req.session.userId; // crashes the entire app.. seriously bro..
 
     try {
-        // assertIsDefined(authenticatedUserId);
+        assertIsDefined(authenticatedUserId);
 
         if (!title) {
             throw createHttpError(400, "Note must have a title");
         }
 
         const newNote = await NoteModel.create({
-            // userId: authenticatedUserId,
-            userId: 'fake-user-id',
+            userId: authenticatedUserId,
+            // userId: 'fake-user-id',
             title: title,
             text: text,
         });
@@ -107,9 +107,9 @@ export const updateNote: RequestHandler<UpdateNoteParams, unknown, UpdateNoteBod
             throw createHttpError(404, "Note not found");
         }
 
-        // if (!note.userId.equals(authenticatedUserId)) {
-        //     throw createHttpError(401, "You cannot access this note");
-        // }
+        if (!note.userId.equals(authenticatedUserId)) {
+            throw createHttpError(401, "You cannot access this note");
+        }
 
         note.title = newTitle;
         note.text = newText;
@@ -139,9 +139,9 @@ export const deleteNote: RequestHandler = async (req, res, next) => {
             throw createHttpError(404, "Note not found");
         }
 
-        // if (!note.userId.equals(authenticatedUserId)) {
-        //     throw createHttpError(401, "You cannot access this note");
-        // }
+        if (!note.userId.equals(authenticatedUserId)) {
+            throw createHttpError(401, "You cannot access this note");
+        }
 
         await note.remove();
 

@@ -48,9 +48,8 @@ export const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = asy
             password: passwordHashed,
         });
 
-        console.log(req.session);
         req.session.userId = newUser._id;
-        console.log(req.session);
+
         res.status(201).json(newUser);
     } catch (error) {
         next(error);
