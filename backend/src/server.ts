@@ -11,6 +11,7 @@ import MongoStore from "connect-mongo";
 import { requiresAuth } from "./middleware/auth";
 import cors from "cors";
 import mongoose from "mongoose";
+import path from "path";
 const app = express();
 
 console.log("process.env.NODE_ENV: " + process.env.NODE_ENV);
@@ -72,6 +73,11 @@ console.log('session middleware configured');
 app.get('/', (req, res) => {
     res.send('Hello from Vercel Express Mongoose!');
 });
+app.get('/favicon.png', (req, res) => {
+    // Send the favicon file
+    res.sendFile(path.join(__dirname, 'public', 'favicon.png'));
+});
+
 app.use("/api/users", userRoutes);
 // app.use("/api/notes", requiresAuth, notesRoutes);
 app.use("/api/notes", notesRoutes);
