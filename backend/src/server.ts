@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 
 const port = env.PORT;
 
+console.log('trying to connect to mongo at: ' + env.MONGODB_URI);
+
 mongoose.connect(env.MONGODB_URI)
     .then(() => {
         console.log("Mongoose connected");
@@ -12,3 +14,6 @@ mongoose.connect(env.MONGODB_URI)
         });
     })
     .catch(console.error);
+
+
+console.log('post-connection hello');
