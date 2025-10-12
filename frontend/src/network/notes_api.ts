@@ -20,7 +20,10 @@ async function fetchData(input: RequestInfo, init?: RequestInit) {
 }
 
 export async function getLoggedInUser(): Promise<User> {
-    const response = await fetchData("https://mern-monorepo-vercel-backend.vercel.app/api/users", { method: "GET" });
+    const response = await fetchData("https://mern-monorepo-vercel-backend.vercel.app/api/users", {
+        method: "GET",
+        credentials: 'include',
+    });
     return response.json();
 }
 
@@ -62,11 +65,17 @@ export async function login(credentials: LoginCredentials): Promise<User> {
 }
 
 export async function logout() {
-    await fetchData("https://mern-monorepo-vercel-backend.vercel.app/api/users/logout", { method: "POST" });
+    await fetchData("https://mern-monorepo-vercel-backend.vercel.app/api/users/logout", {
+        method: "POST",
+        credentials: 'include',
+    });
 }
 
 export async function fetchNotes(): Promise<Note[]> {
-    const response = await fetchData("https://mern-monorepo-vercel-backend.vercel.app/api/notes", { method: "GET" });
+    const response = await fetchData("https://mern-monorepo-vercel-backend.vercel.app/api/notes", {
+        method: "GET",
+        credentials: 'include',
+    });
     return response.json();
 }
 
@@ -83,6 +92,7 @@ export async function createNote(note: NoteInput): Promise<Note> {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(note),
+            credentials: 'include',
         });
     return response.json();
 }
@@ -95,10 +105,14 @@ export async function updateNote(noteId: string, note: NoteInput): Promise<Note>
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(note),
+            credentials: 'include',
         });
     return response.json();
 }
 
 export async function deleteNote(noteId: string) {
-    await fetchData("https://mern-monorepo-vercel-backend.vercel.app/api/notes/" + noteId, { method: "DELETE" });
+    await fetchData("https://mern-monorepo-vercel-backend.vercel.app/api/notes/" + noteId, {
+        method: "DELETE",
+        credentials: 'include',
+    });
 }
