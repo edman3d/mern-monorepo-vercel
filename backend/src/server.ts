@@ -45,6 +45,7 @@ app.use(session({
         sameSite: 'none', // Required for cross-origin requests
         secure: true,     // Required when sameSite is 'none', needs HTTPS (stops working on localhost i think)
         maxAge: 60 * 60 * 1000,
+        httpOnly: false
     },
     rolling: true,
     store: MongoStore.create({
