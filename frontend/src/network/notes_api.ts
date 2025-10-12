@@ -38,6 +38,7 @@ export async function signUp(credentials: SignUpCredentials): Promise<User> {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(credentials),
+            credentials: 'include',
         });
     return response.json();
 }
@@ -55,6 +56,7 @@ export async function login(credentials: LoginCredentials): Promise<User> {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(credentials),
+            credentials: 'include',
         });
     return response.json();
 }
