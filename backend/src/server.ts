@@ -49,6 +49,9 @@ app.use(express.json());
 
 console.log('session middleware configured');
 
+app.get('/', (req, res) => {
+    res.send('Hello from Vercel Express Mongoose!');
+});
 app.use("/api/users", userRoutes);
 // app.use("/api/notes", requiresAuth, notesRoutes);
 app.use("/api/notes", notesRoutes);
