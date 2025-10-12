@@ -5,6 +5,7 @@ import NoteModel from "../models/note";
 import { assertIsDefined } from "../util/assertIsDefined";
 
 export const getNotes: RequestHandler = async (req, res, next) => {
+    console.log(req.session);
     const authenticatedUserId = req.session.userId;
 
     try {
