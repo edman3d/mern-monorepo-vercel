@@ -52,7 +52,7 @@ interface CreateNoteBody {
 export const createNote: RequestHandler<unknown, unknown, CreateNoteBody, unknown> = async (req, res, next) => {
     const title = req.body.title;
     const text = req.body.text;
-    const authenticatedUserId = req.session.userId; // crashes the entire app.. seriously bro..
+    // const authenticatedUserId = req.session.userId; // crashes the entire app.. seriously bro..
 
     try {
         // assertIsDefined(authenticatedUserId);
