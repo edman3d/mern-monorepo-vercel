@@ -83,11 +83,6 @@ import express from 'express';
 import mongoose from "mongoose";
 const app = express();
 
-// Define your routes
-app.get('/', (req, res) => {
-    res.json({ message: 'Hello from Express on Vercel!' });
-});
-
 const port = env.PORT;
 
 console.log('trying to connect to mongo at: ' + env.MONGODB_URI);
@@ -103,6 +98,13 @@ mongoose.connect(env.MONGODB_URI)
 
 
 console.log('post-connection hello');
+
+// Define your routes
+app.get('/', (req, res) => {
+    res.json({ message: 'Hello from Express on Vercel!' });
+});
+
+
 
 // Export the Express app
 export default app;
