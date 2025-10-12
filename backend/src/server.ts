@@ -37,7 +37,12 @@ app.use(session({
     secret: env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    // cookie: {
+    //     maxAge: 60 * 60 * 1000,
+    // },
     cookie: {
+        sameSite: 'none', // Required for cross-origin requests
+        secure: true,     // Required when sameSite is 'none', needs HTTPS (stops working on localhost i think)
         maxAge: 60 * 60 * 1000,
     },
     rolling: true,
