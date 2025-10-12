@@ -32,6 +32,19 @@ mongoose.connect(env.MONGODB_URI)
 
 console.log('post-connection hello');
 
+// // Cookies stop working as soon as we stop using the localhost domain
+app.use(session({
+    secret: env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 60 * 60 * 1000,
+    },
+    rolling: true,
+    store: MongoStore.create({
+        mongoUrl: env.MONGODB_URI
+    }),
+}));
 // const corsOptions = {
 //     origin: [env.REACT_APP_MONOREPO_FRONTEND_URL, 'http://localhost:3000'], // Allow requests only from these origins
 //     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
