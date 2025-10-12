@@ -4,8 +4,6 @@ import { requiresAuth } from "../middleware/auth";
 
 const router = express.Router();
 
-// do router.use(cors)?
-
 router.get("/", requiresAuth, UserController.getAuthenticatedUser);
 
 router.post("/signup", UserController.signUp);

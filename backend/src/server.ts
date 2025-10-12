@@ -12,13 +12,13 @@ import { requiresAuth } from "./middleware/auth";
 import cors from "cors";
 import mongoose from "mongoose";
 import path from "path";
+
 const app = express();
 
 console.log("process.env.NODE_ENV: " + process.env.NODE_ENV);
 console.log("process.env.REACT_APP_MONOREPO_FRONTEND_URL: " + process.env.REACT_APP_MONOREPO_FRONTEND_URL);
 console.log("env.SESSION_SECRET", env.SESSION_SECRET);
 console.log("env.MONGODB_URI", env.MONGODB_URI);
-
 console.log('trying to connect to mongo at: ' + env.MONGODB_URI);
 
 mongoose.connect(env.MONGODB_URI)
@@ -46,7 +46,6 @@ app.use(session({
         sameSite: 'none', // Required for cross-origin requests
         secure: true,     // Required when sameSite is 'none', needs HTTPS (stops working on localhost i think)
         maxAge: 60 * 60 * 1000,
-        // httpOnly: false
     },
     rolling: true,
     store: MongoStore.create({
