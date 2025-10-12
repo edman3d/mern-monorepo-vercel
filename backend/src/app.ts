@@ -1,5 +1,6 @@
 import "dotenv/config";
 // import dotenv from "dotenv";
+import mongoose from "mongoose";
 import express, { NextFunction, Request, Response } from "express";
 import notesRoutes from "./routes/notes";
 import userRoutes from "./routes/users";
@@ -10,8 +11,6 @@ import env from "./util/validateEnv";
 import MongoStore from "connect-mongo";
 import { requiresAuth } from "./middleware/auth";
 import cors from "cors";
-
-// dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 
 const app = express();
 
@@ -70,5 +69,15 @@ app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
     }
     res.status(statusCode).json({ error: errorMessage });
 });
+
+
+mongoose.connect(env.MONGODB_URI)
+    .then(() => {
+        console.log("Mongoose connected");
+        app.listen(env.PORT, () => {
+            console.log("Server running on port: " + env.PORT);
+        });
+    })
+    .catch(console.error);
 
 export default app;
