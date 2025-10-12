@@ -45,16 +45,16 @@ app.use(session({
         mongoUrl: env.MONGODB_URI
     }),
 }));
-// const corsOptions = {
-//     origin: [env.REACT_APP_MONOREPO_FRONTEND_URL, 'http://localhost:3000'], // Allow requests only from these origins
-//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-//     credentials: true, // Allow cookies, if your application uses them
-//     optionsSuccessStatus: 204,
-//     // headers: 'Content-Type, Authorization, Content-Length, X-Requested-With',
-// };
-// console.log('CORS origins: ', corsOptions.origin.join(', '));
-// app.use(cors(corsOptions));
-app.use(cors());
+const corsOptions = {
+    origin: [env.REACT_APP_MONOREPO_FRONTEND_URL, 'http://localhost:3000'], // Allow requests only from these origins
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true, // Allow cookies, if your application uses them
+    optionsSuccessStatus: 204,
+    // headers: 'Content-Type, Authorization, Content-Length, X-Requested-With',
+};
+console.log('CORS origins: ', corsOptions.origin.join(', '));
+app.use(cors(corsOptions));
+// app.use(cors());
 
 app.use(morgan("dev"));
 
