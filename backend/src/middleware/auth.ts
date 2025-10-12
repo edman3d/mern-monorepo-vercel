@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import createHttpError from "http-errors";
 
 export const requiresAuth: RequestHandler = (req, res, next) => {
-    console.log("req.session.userId", req.session.userId);
+    console.log("req.session.userId: ", req.session.userId);
     if (req.session.userId) {
         next();
     } else {
