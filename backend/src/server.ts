@@ -61,37 +61,19 @@ const corsOptions = {
 };
 console.log('CORS origins: ', corsOptions.origin.join(', '));
 app.use(cors(corsOptions));
-// app.use(cors());
 
 app.use(morgan("dev"));
 
 app.use(express.json());
+
+// Send the favicon/public files
+app.use(express.static(path.join(__dirname, '../public')));
 
 console.log('session middleware configured');
 
 app.get('/', (req, res) => {
     res.send('Hello from Vercel Express Mongoose!');
 });
-
-// Send the favicon files
-// app.get('/favicon.png', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'public', 'favicon.png'));
-// });
-// app.get('/favicon.png', (req, res) => {
-//     res.sendFile(path.join('public', 'favicon.png'));
-// });
-// app.get('/favicon.ico', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'public', 'favicon.ico'));
-// });
-// app.get('/favicon.ico', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../public', 'favicon.ico'));
-// });
-console.log('dirname: ' + __dirname);
-const testpath = path.join(__dirname, '../public');
-console.log('testpath: ' + testpath);
-
-app.use(express.static(path.join(__dirname, '../public')));
-
 app.use("/api/users", userRoutes);
 // app.use("/api/notes", requiresAuth, notesRoutes);
 app.use("/api/notes", notesRoutes);
