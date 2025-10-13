@@ -98,6 +98,7 @@ app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
 
 console.log('post 500 middleware');
 
+// This is instead handled by Vercel because I've defined a vercel.json file
 // app.listen(env.PORT, () => {
 //     console.log(`Server running on port ${env.PORT}`);
 // });
