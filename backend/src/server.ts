@@ -105,8 +105,8 @@ app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
 
 console.log('post 500 middleware');
 
-app.listen(env.PORT, () => {
-    console.log(`Server running on port ${env.PORT}`);
-});
+// app.listen(env.PORT, () => {
+//     console.log(`Server running on port ${env.PORT}`);
+// });
 
 export default app;
