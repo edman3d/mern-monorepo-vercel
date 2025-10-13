@@ -77,15 +77,17 @@ app.get('/', (req, res) => {
 // app.get('/favicon.png', (req, res) => {
 //     res.sendFile(path.join(__dirname, 'public', 'favicon.png'));
 // });
-app.get('/favicon.png', (req, res) => {
-    res.sendFile(path.join('public', 'favicon.png'));
-});
+// app.get('/favicon.png', (req, res) => {
+//     res.sendFile(path.join('public', 'favicon.png'));
+// });
 // app.get('/favicon.ico', (req, res) => {
 //     res.sendFile(path.join(__dirname, 'public', 'favicon.ico'));
 // });
-app.get('/favicon.ico', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public', 'favicon.ico'));
-});
+// app.get('/favicon.ico', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../public', 'favicon.ico'));
+// });
+console.log('dirname: ' + __dirname);
+app.use(express.static(path.join('public')));
 
 app.use("/api/users", userRoutes);
 // app.use("/api/notes", requiresAuth, notesRoutes);
