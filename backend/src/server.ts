@@ -1,5 +1,5 @@
-import "dotenv/config";
-// import dotenv from "dotenv";
+// import "dotenv/config";
+
 import express, { NextFunction, Request, Response } from "express";
 import notesRoutes from "./routes/notes";
 import userRoutes from "./routes/users";
@@ -15,12 +15,11 @@ import path from "path";
 
 const app = express();
 
-console.log("process.env.NODE_ENV: " + process.env.NODE_ENV);
-console.log("process.env.REACT_APP_MONOREPO_FRONTEND_URL: " + process.env.REACT_APP_MONOREPO_FRONTEND_URL);
-console.log("env.SESSION_SECRET", env.SESSION_SECRET);
-console.log("env.MONGODB_URI", env.MONGODB_URI);
-console.log('trying to connect to mongo at: ' + env.MONGODB_URI);
+console.log("NODE_ENV: " + process.env.NODE_ENV);
+console.log("REACT_APP_MONOREPO_FRONTEND_URL: " + process.env.REACT_APP_MONOREPO_FRONTEND_URL);
+console.log("MONGODB_URI", env.MONGODB_URI);
 
+console.log('Connecting to Mongoose... ');
 mongoose.set("strictQuery", false); // get rid of annoying warning about upcoming change in mongoose 7
 mongoose.connect(env.MONGODB_URI)
     .then(() => {
