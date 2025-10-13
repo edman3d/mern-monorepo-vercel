@@ -21,6 +21,7 @@ console.log("env.SESSION_SECRET", env.SESSION_SECRET);
 console.log("env.MONGODB_URI", env.MONGODB_URI);
 console.log('trying to connect to mongo at: ' + env.MONGODB_URI);
 
+mongoose.set("strictQuery", false); // get rid of annoying warning about upcoming change in mongoose 7
 mongoose.connect(env.MONGODB_URI)
     .then(() => {
         console.log("Mongoose connected");
@@ -33,7 +34,6 @@ mongoose.connect(env.MONGODB_URI)
 
 console.log('post-connection hello');
 
-// // Cookies stop working as soon as we stop using the localhost domain
 app.set('trust proxy', 1);
 app.use(session({
     secret: env.SESSION_SECRET,
@@ -63,7 +63,7 @@ console.log('CORS origins: ', corsOptions.origin.join(', '));
 app.use(cors(corsOptions));
 // app.use(cors());
 
-app.use(morgan("dev"));
+// app.use(morgan("dev"));
 
 app.use(express.json());
 
