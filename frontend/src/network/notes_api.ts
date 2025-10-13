@@ -1,8 +1,11 @@
 import { ConflictError, UnauthorizedError } from "../errors/http_errors";
 import { Note } from "../models/note";
 import { User } from "../models/user";
+import env from "../utils/validateEnv";
 
 async function fetchData(input: RequestInfo, init?: RequestInit) {
+    console.log('NODE_ENV: ', env.NODE_ENV);
+    console.log('REACT_APP_MONOREPO_BACKEND_URL: ', env.REACT_APP_MONOREPO_BACKEND_URL);
     const response = await fetch(input, init);
     if (response.ok) {
         return response;
@@ -20,7 +23,7 @@ async function fetchData(input: RequestInfo, init?: RequestInit) {
 }
 
 export async function getLoggedInUser(): Promise<User> {
-    const response = await fetchData("https://mern-monorepo-vercel-backend.vercel.app/api/users", {
+    const response = await fetchData(env.REACT_APP_MONOREPO_BACKEND_URL + "/api/users", {
         method: "GET",
         credentials: 'include',
     });
@@ -34,7 +37,7 @@ export interface SignUpCredentials {
 }
 
 export async function signUp(credentials: SignUpCredentials): Promise<User> {
-    const response = await fetchData("https://mern-monorepo-vercel-backend.vercel.app/api/users/signup",
+    const response = await fetchData(env.REACT_APP_MONOREPO_BACKEND_URL + "/api/users/signup",
         {
             method: "POST",
             headers: {
@@ -52,7 +55,7 @@ export interface LoginCredentials {
 }
 
 export async function login(credentials: LoginCredentials): Promise<User> {
-    const response = await fetchData("https://mern-monorepo-vercel-backend.vercel.app/api/users/login",
+    const response = await fetchData(env.REACT_APP_MONOREPO_BACKEND_URL + "/api/users/login",
         {
             method: "POST",
             headers: {
@@ -65,14 +68,14 @@ export async function login(credentials: LoginCredentials): Promise<User> {
 }
 
 export async function logout() {
-    await fetchData("https://mern-monorepo-vercel-backend.vercel.app/api/users/logout", {
+    await fetchData(env.REACT_APP_MONOREPO_BACKEND_URL + "/api/users/logout", {
         method: "POST",
         credentials: 'include',
     });
 }
 
 export async function fetchNotes(): Promise<Note[]> {
-    const response = await fetchData("https://mern-monorepo-vercel-backend.vercel.app/api/notes", {
+    const response = await fetchData(env.REACT_APP_MONOREPO_BACKEND_URL + "/api/notes", {
         method: "GET",
         credentials: 'include',
     });
@@ -85,7 +88,7 @@ export interface NoteInput {
 }
 
 export async function createNote(note: NoteInput): Promise<Note> {
-    const response = await fetchData("https://mern-monorepo-vercel-backend.vercel.app/api/notes",
+    const response = await fetchData(env.REACT_APP_MONOREPO_BACKEND_URL + "/api/notes",
         {
             method: "POST",
             headers: {
@@ -98,7 +101,7 @@ export async function createNote(note: NoteInput): Promise<Note> {
 }
 
 export async function updateNote(noteId: string, note: NoteInput): Promise<Note> {
-    const response = await fetchData("https://mern-monorepo-vercel-backend.vercel.app/api/notes/" + noteId,
+    const response = await fetchData(env.REACT_APP_MONOREPO_BACKEND_URL + "/api/notes/" + noteId,
         {
             method: "PATCH",
             headers: {
@@ -111,7 +114,7 @@ export async function updateNote(noteId: string, note: NoteInput): Promise<Note>
 }
 
 export async function deleteNote(noteId: string) {
-    await fetchData("https://mern-monorepo-vercel-backend.vercel.app/api/notes/" + noteId, {
+    await fetchData(env.REACT_APP_MONOREPO_BACKEND_URL + "/api/notes/" + noteId, {
         method: "DELETE",
         credentials: 'include',
     });

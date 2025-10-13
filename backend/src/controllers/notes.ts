@@ -5,7 +5,6 @@ import NoteModel from "../models/note";
 import { assertIsDefined } from "../util/assertIsDefined";
 
 export const getNotes: RequestHandler = async (req, res, next) => {
-    // console.log(req.session);
     const authenticatedUserId = req.session.userId;
 
     try {
@@ -64,7 +63,6 @@ export const createNote: RequestHandler<unknown, unknown, CreateNoteBody, unknow
 
         const newNote = await NoteModel.create({
             userId: authenticatedUserId,
-            // userId: 'fake-user-id',
             title: title,
             text: text,
         });

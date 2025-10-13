@@ -24,9 +24,6 @@ mongoose.set("strictQuery", false); // get rid of annoying warning about upcomin
 mongoose.connect(env.MONGODB_URI)
     .then(() => {
         console.log("Mongoose connected");
-        // app.listen(port, () => {
-        //     console.log("Server running on port: " + port);
-        // });
     })
     .catch(err => console.error('MongoDB connection error:', err));
 
@@ -34,18 +31,21 @@ mongoose.connect(env.MONGODB_URI)
 console.log('post-connection hello');
 
 app.set('trust proxy', 1);
+
+// Configure cookies based on environment
+let cookieOptions: session.CookieOptions = {
+    maxAge: 60 * 60 * 1000,
+};
+if (env.NODE_ENV === 'production') {
+    cookieOptions.sameSite = 'none'; // Required for cross-origin requests,
+    cookieOptions.secure = true;     // Required when sameSite is 'none', needs HTTPS (stops working on localhost i think)
+}
+
 app.use(session({
     secret: env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    // cookie: {
-    //     maxAge: 60 * 60 * 1000, // works on localhost
-    // },
-    cookie: {
-        sameSite: 'none', // Required for cross-origin requests
-        secure: true,     // Required when sameSite is 'none', needs HTTPS (stops working on localhost i think)
-        maxAge: 60 * 60 * 1000,
-    },
+    cookie: cookieOptions,
     rolling: true,
     store: MongoStore.create({
         mongoUrl: env.MONGODB_URI
@@ -97,9 +97,12 @@ app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
 
 console.log('post 500 middleware');
 
-// This is instead handled by Vercel because I've defined a vercel.json file
-// app.listen(env.PORT, () => {
-//     console.log(`Server running on port ${env.PORT}`);
-// });
+// In production this is instead handled by Vercel because I've defined a vercel.json file
+if (env.NODE_ENV === 'development') {
+    app.listen(env.PORT, () => {
+        console.log(`Server running on port ${env.PORT}`);
+    });
+}
+
 
 export default app;
