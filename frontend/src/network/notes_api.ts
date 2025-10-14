@@ -6,6 +6,7 @@ import env from "../utils/validateEnv";
 async function fetchData(input: RequestInfo, init?: RequestInit) {
     console.log('NODE_ENV: ', env.NODE_ENV);
     console.log('REACT_APP_MONOREPO_BACKEND_URL: ', env.REACT_APP_MONOREPO_BACKEND_URL);
+    console.log('test if frontend urls change');
     const response = await fetch(input, init);
     if (response.ok) {
         return response;
