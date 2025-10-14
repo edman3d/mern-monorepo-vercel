@@ -44,7 +44,7 @@ conn.on('reconnectFailed', () => console.error('Mongoose: reconnect failed'));
 app.set('trust proxy', 1);
 
 // Configure cookies based on environment
-let cookieOptions: session.CookieOptions = {
+const cookieOptions: session.CookieOptions = {
     maxAge: 60 * 60 * 1000,
 };
 if (env.NODE_ENV === 'production') {
@@ -62,22 +62,22 @@ app.use(session({
         mongoUrl: env.MONGODB_URI
     }),
 }));
+
+// Note on CORS origin: Vercel generates 3 URLS, one of which changes per deployment.
 const corsOptions = {
-    origin: [env.REACT_APP_MONOREPO_FRONTEND_URL, 'http://localhost:3000'], // Allow requests only from these origins
+    origin: [env.REACT_APP_MONOREPO_FRONTEND_URL], // Allow requests only from these origins
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // Allow cookies, if your application uses them
     optionsSuccessStatus: 204,
-    // headers: 'Content-Type, Authorization, Content-Length, X-Requested-With, Set-Cookie',
 };
-console.log('CORS origins: ', corsOptions.origin.join(', '));
+console.log('Allowed CORS origins: ', corsOptions.origin.join(', '));
 app.use(cors(corsOptions));
 
 app.use(morgan("dev"));
 
 app.use(express.json());
 
-// Send the favicon/public files
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '../public'))); // Send the favicon/public files
 
 console.log('session middleware configured');
 
