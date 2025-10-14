@@ -30,6 +30,17 @@ mongoose.connect(env.MONGODB_URI)
 
 console.log('post-connection hello');
 
+const conn = mongoose.connection;
+
+conn.on('connecting', () => console.log('Mongoose: connecting...'));
+conn.on('connected', () => console.log('Mongoose: connected'));
+conn.once('open', () => console.log('Mongoose: connection open'));
+conn.on('reconnected', () => console.log('Mongoose: reconnected'));
+conn.on('error', (err) => console.error('Mongoose: connection error:', err));
+conn.on('disconnected', () => console.warn('Mongoose: disconnected'));
+conn.on('close', () => console.log('Mongoose: connection closed'));
+conn.on('reconnectFailed', () => console.error('Mongoose: reconnect failed'));
+
 app.set('trust proxy', 1);
 
 // Configure cookies based on environment
