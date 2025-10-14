@@ -13,6 +13,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import path from "path";
 import { mongooseConnect } from "./connectToDb";
+import { connectToMongooseAndCache } from "./connectToDbAndCache";
 
 const app = express();
 
@@ -20,7 +21,8 @@ console.log("NODE_ENV: " + process.env.NODE_ENV);
 console.log("REACT_APP_MONOREPO_FRONTEND_URL: " + process.env.REACT_APP_MONOREPO_FRONTEND_URL);
 console.log("MONGODB_URI", env.MONGODB_URI);
 
-mongooseConnect();
+// mongooseConnect();
+connectToMongooseAndCache();
 
 app.set('trust proxy', 1);
 
