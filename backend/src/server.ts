@@ -1,5 +1,3 @@
-// import "dotenv/config";
-
 import express, { NextFunction, Request, Response } from "express";
 import notesRoutes from "./routes/notes";
 import userRoutes from "./routes/users";
@@ -10,9 +8,7 @@ import env from "./util/validateEnv";
 import MongoStore from "connect-mongo";
 import { requiresAuth } from "./middleware/auth";
 import cors from "cors";
-import mongoose from "mongoose";
 import path from "path";
-import { mongooseConnect } from "./connectToDb";
 import { connectToMongooseAndCache } from "./connectToDbAndCache";
 
 const app = express();
@@ -21,10 +17,9 @@ console.log("NODE_ENV: " + process.env.NODE_ENV);
 console.log("REACT_APP_MONOREPO_FRONTEND_URL: " + process.env.REACT_APP_MONOREPO_FRONTEND_URL);
 console.log("MONGODB_URI", env.MONGODB_URI);
 
-// mongooseConnect();
 connectToMongooseAndCache();
 
-app.set('trust proxy', 1);
+app.set('trust proxy', 1); // TODO: move to production env only maybe
 
 // Configure cookies based on environment
 const cookieOptions: session.CookieOptions = {
@@ -68,8 +63,8 @@ app.get('/', (req, res) => {
     res.send('Hello from Vercel Express Mongoose!');
 });
 app.use("/api/users", userRoutes);
-// app.use("/api/notes", requiresAuth, notesRoutes);
-app.use("/api/notes", notesRoutes);
+app.use("/api/notes", requiresAuth, notesRoutes);
+// app.use("/api/notes", notesRoutes);
 
 app.use((req, res, next) => {
     next(createHttpError(404, "Endpoint not found"));
@@ -97,6 +92,5 @@ if (env.NODE_ENV === 'development') {
         console.log(`Server running on port ${env.PORT}`);
     });
 }
-
 
 export default app;
