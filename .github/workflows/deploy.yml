@@ -19,18 +19,6 @@ jobs:
       - name: 🧭 Checkout repo
         uses: actions/checkout@v4
 
-      # ---------------- FRONTEND DEPLOY ----------------
-      - name: 🚀 Deploy frontend to Vercel
-        working-directory: frontend
-        id: frontend
-        run: |
-          npm install -g vercel@latest
-          npm install
-          # deploy frontend and capture URL
-          FRONTEND_URL=$(vercel deploy --yes --token=$VERCEL_TOKEN --confirm --cwd . | tail -n1)
-          echo "frontend_url=$FRONTEND_URL" >> $GITHUB_ENV
-          echo "Frontend deployed to: $FRONTEND_URL"
-
       # ---------------- BACKEND DEPLOY ----------------
       - name: 🚀 Deploy backend to Vercel
         working-directory: backend
@@ -39,15 +27,29 @@ jobs:
           npm install -g vercel@latest
           npm install
           # deploy backend and inject frontend URL
-          BACKEND_URL=$(vercel deploy --yes --token=$VERCEL_TOKEN --confirm --env FRONTEND_URL=${{ env.frontend_url }} --cwd . | tail -n1)
+          BACKEND_URL=$(vercel deploy --yes --token=$VERCEL_TOKEN --confirm --cwd . | tail -n1)
           echo "backend_url=$BACKEND_URL" >> $GITHUB_ENV
           echo "Backend deployed to: $BACKEND_URL"
 
-      # ---------------- UPDATE FRONTEND ENV VARS ----------------
-      - name: 🔄 Update frontend env var with backend URL
+      # ---------------- FRONTEND DEPLOY ----------------
+      - name: 🚀 Deploy frontend to Vercel
         working-directory: frontend
+        id: frontend
         run: |
-          echo $BACKEND_URL | xargs -I {} vercel env add REACT_APP_BACKEND_URL preview --token=$VERCEL_TOKEN --confirm
+          npm install -g vercel@latest
+          npm install
+          # Set CRA environment variable before build
+          export REACT_APP_BACKEND_URL=${{ env.backend_url }}
+          npm run build
+          FRONTEND_URL=$(vercel deploy --yes --token=$VERCEL_TOKEN --confirm --cwd . | tail -n1)
+          echo "frontend_url=$FRONTEND_URL" >> $GITHUB_ENV
+          echo "Frontend deployed to: $FRONTEND_URL"
+
+      # ---------------- UPDATE BACKEND ENV VARS ----------------
+      - name: 🔄 Update frontend env var with backend URL
+        working-directory: backend
+        run: |
+          echo $FRONTEND_URL | xargs -I {} vercel env add FRONTEND_URL preview --token=$VERCEL_TOKEN --confirm
 
       # ---------------- OPTIONAL: COMMENT ON PR ----------------
       - name: 💬 Comment on PR with preview URLs
