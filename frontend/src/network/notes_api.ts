@@ -8,7 +8,7 @@ async function fetchData(input: RequestInfo, init?: RequestInit) {
     console.log('process.env.VERCEL_URL: ', process.env.REACT_APP_VERCEL_URL);
     console.log('NODE_ENV: ', env.NODE_ENV);
     console.log('REACT_APP_MONOREPO_BACKEND_URL: ', env.REACT_APP_MONOREPO_BACKEND_URL);
-    console.log('move ENV vars to team level and link');
+    console.log('shared env vars were overridden by project level ones');
     const response = await fetch(input, init);
     if (response.ok) {
         return response;
