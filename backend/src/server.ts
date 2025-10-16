@@ -19,6 +19,8 @@ console.log("MONGODB_URI", env.MONGODB_URI);
 
 connectToMongooseAndCache();
 
+console.log("process.env.VERCEL_URL: ", process.env.VERCEL_URL)
+
 app.set('trust proxy', 1); // TODO: move to production env only maybe
 
 // Configure cookies based on environment
