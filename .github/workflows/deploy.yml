@@ -38,6 +38,7 @@ jobs:
         run: |
           npm install -g vercel@latest
           npm install
+          echo "env.backend_url: ${{ env.backend_url }}"
           # Deploy frontend to Vercel cloud, pass backend URL as env var
           FRONTEND_URL=$(vercel deploy --yes --token=$VERCEL_TOKEN --confirm --cwd . --env REACT_APP_BACKEND_URL=${{ env.backend_url }} | tail -n1)
           echo "frontend_url=$FRONTEND_URL" >> $GITHUB_ENV
