@@ -1,0 +1,61 @@
+name: Deploy Monorepo to Vercel
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      FRONTEND_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_FRONTEND }}
+      BACKEND_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_BACKEND }}
+
+    steps:
+      - name: 🧭 Checkout repo
+        uses: actions/checkout@v4
+
+      # ---------------- FRONTEND DEPLOY ----------------
+      - name: 🚀 Deploy frontend to Vercel
+        id: frontend
+        working-directory: frontend
+        run: |
+          npm install -g vercel@latest
+          npm install
+          FRONTEND_URL=$(vercel deploy --yes --token=$VERCEL_TOKEN --scope=$VERCEL_ORG_ID --project $FRONTEND_PROJECT_ID --cwd . | tail -n1)
+          echo "frontend_url=${FRONTEND_URL}" >> $GITHUB_ENV
+          echo "Frontend deployed to: $FRONTEND_URL"
+
+      # ---------------- BACKEND DEPLOY ----------------
+      - name: 🚀 Deploy backend to Vercel
+        id: backend
+        working-directory: backend
+        run: |
+          npm install -g vercel@latest
+          npm install
+          BACKEND_URL=$(vercel deploy --yes --token=$VERCEL_TOKEN --scope=$VERCEL_ORG_ID --project $BACKEND_PROJECT_ID --env FRONTEND_URL=${{ env.frontend_url }} --cwd . | tail -n1)
+          echo "backend_url=${BACKEND_URL}" >> $GITHUB_ENV
+          echo "Backend deployed to: $BACKEND_URL"
+
+      # ---------------- UPDATE FRONTEND ENV VARS ----------------
+      - name: 🔄 Update frontend env var with backend URL
+        run: |
+          vercel env add REACT_APP_BACKEND_URL preview --token=$VERCEL_TOKEN --scope=$VERCEL_ORG_ID --project $FRONTEND_PROJECT_ID <<< "${{ env.backend_url }}"
+          echo "Synced backend preview URL to frontend env."
+
+      # ---------------- OPTIONAL: COMMENT ON PR ----------------
+      - name: 💬 Comment on PR with preview URLs
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            🚀 **Preview deployments are live!**
+            - 🧩 Frontend: [${{ env.frontend_url }}](${{ env.frontend_url }})
+            - ⚙️ Backend: [${{ env.backend_url }}](${{ env.backend_url }})
