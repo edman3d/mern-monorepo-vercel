@@ -16,6 +16,7 @@ const app = express();
 console.log("NODE_ENV: " + process.env.NODE_ENV);
 console.log("process.env.VERCEL_ENV: ", process.env.VERCEL_ENV);
 console.log("process.env.VERCEL_URL: ", process.env.VERCEL_URL);
+console.log("check if $VERCEL_GIT_COMMIT_REF stuff works on backend");
 console.log("REACT_APP_MONOREPO_FRONTEND_URL: " + process.env.REACT_APP_MONOREPO_FRONTEND_URL);
 console.log("MONGODB_URI", env.MONGODB_URI);
 
