@@ -13,7 +13,7 @@ import { connectToMongooseAndCache } from "./connectToDbAndCache";
 
 const app = express();
 
-console.log('FRONTEND_URL FROM WORKFLOW: ', process.env.FRONTEND_URL)
+console.log('.FRONTEND_URL FROM WORKFLOW: ', process.env.FRONTEND_URL)
 
 connectToMongooseAndCache();
 
