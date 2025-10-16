@@ -13,6 +13,8 @@ import { connectToMongooseAndCache } from "./connectToDbAndCache";
 
 const app = express();
 
+console.log('FRONTEND_URL FROM WORKFLOW: ', process.env.FRONTEND_URL)
+
 connectToMongooseAndCache();
 
 app.set('trust proxy', 1); // TODO: move to production env only maybe

@@ -4,6 +4,7 @@ import { User } from "../models/user";
 import env from "../utils/validateEnv";
 
 async function fetchData(input: RequestInfo, init?: RequestInit) {
+    console.log('REACT_APP_BACKEND_URL FROM WORKFLOW: ', process.env.REACT_APP_BACKEND_URL)
     console.log("process.env.VERCEL_ENV: ", process.env.REACT_APP_VERCEL_ENV);
     console.log('process.env.VERCEL_URL: ', process.env.REACT_APP_VERCEL_URL);
     console.log('NODE_ENV: ', env.NODE_ENV);
