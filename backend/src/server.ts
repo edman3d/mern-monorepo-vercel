@@ -14,12 +14,12 @@ import { connectToMongooseAndCache } from "./connectToDbAndCache";
 const app = express();
 
 console.log("NODE_ENV: " + process.env.NODE_ENV);
+console.log("process.env.VERCEL_ENV: ", process.env.VERCEL_ENV);
+console.log("process.env.VERCEL_URL: ", process.env.VERCEL_URL);
 console.log("REACT_APP_MONOREPO_FRONTEND_URL: " + process.env.REACT_APP_MONOREPO_FRONTEND_URL);
 console.log("MONGODB_URI", env.MONGODB_URI);
 
 connectToMongooseAndCache();
-
-console.log("process.env.VERCEL_URL: ", process.env.VERCEL_URL)
 
 app.set('trust proxy', 1); // TODO: move to production env only maybe
 
