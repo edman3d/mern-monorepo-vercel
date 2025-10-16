@@ -13,21 +13,6 @@ import { connectToMongooseAndCache } from "./connectToDbAndCache";
 
 const app = express();
 
-if (process.env.VERCEL_ENV === 'preview') {
-    // sanitize branch name for URLs
-    console.log('VERCEL_BRANCH_URL: ', process.env.VERCEL_BRANCH_URL);
-    const branch = process.env.VERCEL_GIT_COMMIT_REF!.replace(/\//g, '-');
-    const owner = process.env.VERCEL_GIT_REPO_OWNER;
-    process.env.REACT_APP_MONOREPO_FRONTEND_URL = `https://mern-monorepo-vercel-frontend-git-${branch}-${owner}.vercel.app`;
-}
-
-console.log("NODE_ENV: " + process.env.NODE_ENV);
-console.log("process.env.VERCEL_ENV: ", process.env.VERCEL_ENV);
-console.log("process.env.VERCEL_URL: ", process.env.VERCEL_URL);
-console.log("check if $VERCEL_GIT_COMMIT_REF stuff works on backend");
-console.log("REACT_APP_MONOREPO_FRONTEND_URL: " + process.env.REACT_APP_MONOREPO_FRONTEND_URL);
-console.log("MONGODB_URI", env.MONGODB_URI);
-
 connectToMongooseAndCache();
 
 app.set('trust proxy', 1); // TODO: move to production env only maybe
