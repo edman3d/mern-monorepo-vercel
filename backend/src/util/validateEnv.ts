@@ -31,6 +31,7 @@ if (process.env.VERCEL_ENV === 'preview') {
     console.log('VERCEL_GIT_COMMIT_SHA: ', process.env.VERCEL_GIT_COMMIT_SHA);
     console.log('VERCEL_PROJECT_ID: ', process.env.VERCEL_PROJECT_ID);
     console.log('VERCEL_DEPLOYMENT_ID: ', process.env.VERCEL_DEPLOYMENT_ID);
+    console.log('test that nothing builds after turning it off');
 
     const branch = process.env.VERCEL_GIT_COMMIT_REF!.replace(/\//g, '-');
     const owner = process.env.VERCEL_GIT_REPO_OWNER;
