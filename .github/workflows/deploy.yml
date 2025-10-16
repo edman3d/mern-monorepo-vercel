@@ -53,7 +53,8 @@ jobs:
       - name: Update backend with frontend URL (runtime env)
         working-directory: backend
         run: |
-          vercel env add FRONTEND_URL preview --token=$VERCEL_TOKEN --confirm <<< "${{ env.frontend_url }}"
+          vercel link --yes --token $VERCEL_TOKEN
+          vercel env add FRONTEND_URL preview --token=$VERCEL_TOKEN <<< "${{ env.frontend_url }}"
 
       # ---------------- OPTIONAL: Comment on PR ----------------
       - name: Comment on PR with preview URLs
