@@ -1,12 +1,12 @@
-name: Deploy Monorepo to Vercel
+name: Deploy Monorepo to Vercel (CRA + Express)
 
 on:
+  pull_request:
+    types: [opened, synchronize, reopened]
   push:
     branches-ignore:
       - main
       - master
-  pull_request:
-    types: [opened, synchronize, reopened]
 
 jobs:
   deploy:
@@ -19,45 +19,46 @@ jobs:
       - name: 🧭 Checkout repo
         uses: actions/checkout@v4
 
-      # ---------------- BACKEND DEPLOY ----------------
-      - name: 🚀 Deploy backend to Vercel
-        working-directory: backend
-        id: backend
-        run: |
-          npm install -g vercel@latest
-          npm install
-          # deploy backend and inject frontend URL
-          BACKEND_URL=$(vercel deploy --yes --token=$VERCEL_TOKEN --confirm --cwd . | tail -n1)
-          echo "backend_url=$BACKEND_URL" >> $GITHUB_ENV
-          echo "Backend deployed to: $BACKEND_URL"
-
-      # ---------------- FRONTEND DEPLOY ----------------
-      - name: 🚀 Deploy frontend to Vercel
+      # ---------------- FRONTEND PREVIEW DEPLOY ----------------
+      - name: 🚀 Deploy frontend first (preview URL)
         working-directory: frontend
         id: frontend
         run: |
           npm install -g vercel@latest
           npm install
-          # Set CRA environment variable before build
-          # export REACT_APP_BACKEND_URL=${{ env.backend_url }}
-          export REACT_APP_BACKEND_URL=${{ 'testurl.com' }}
-          npm run build
           FRONTEND_URL=$(vercel deploy --yes --token=$VERCEL_TOKEN --confirm --cwd . | tail -n1)
           echo "frontend_url=$FRONTEND_URL" >> $GITHUB_ENV
-          echo "Frontend deployed to: $FRONTEND_URL"
+          echo "Frontend preview URL: $FRONTEND_URL"
 
-      # ---------------- UPDATE BACKEND ENV VARS ----------------
-      - name: 🔄 Update frontend env var with backend URL
+      # ---------------- BACKEND PREVIEW DEPLOY ----------------
+      - name: 🚀 Deploy backend with frontend URL
         working-directory: backend
+        id: backend
         run: |
-          echo $FRONTEND_URL | xargs -I {} vercel env add FRONTEND_URL preview --token=$VERCEL_TOKEN --confirm
+          npm install -g vercel@latest
+          npm install
+          # Inject frontend URL as runtime env for backend
+          BACKEND_URL=$(vercel deploy --yes --token=$VERCEL_TOKEN --confirm --env FRONTEND_URL=${{ env.frontend_url }} --cwd . | tail -n1)
+          echo "backend_url=$BACKEND_URL" >> $GITHUB_ENV
+          echo "Backend preview URL: $BACKEND_URL"
 
-      # ---------------- OPTIONAL: COMMENT ON PR ----------------
+      # ---------------- FRONTEND BUILD + DEPLOY WITH BACKEND ----------------
+      - name: 🚀 Build & deploy frontend with backend URL
+        working-directory: frontend
+        run: |
+          # Set CRA build-time env var before build
+          export REACT_APP_BACKEND_URL=${{ env.backend_url }}
+          npm install
+          npm run build
+          # Deploy built frontend
+          vercel deploy --yes --token=$VERCEL_TOKEN --confirm --cwd .
+
+      # ---------------- OPTIONAL: Comment on PR with preview URLs ----------------
       - name: 💬 Comment on PR with preview URLs
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           message: |
             🚀 **Preview deployments are live!**
-            - 🧩 Frontend: [${{ env.frontend_url }}](${{ env.frontend_url }})
             - ⚙️ Backend: [${{ env.backend_url }}](${{ env.backend_url }})
+            - 🧩 Frontend: [${{ env.frontend_url }}](${{ env.frontend_url }})
