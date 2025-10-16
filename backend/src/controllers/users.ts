@@ -4,6 +4,7 @@ import UserModel from "../models/user";
 import bcrypt from "bcrypt";
 
 export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
+    console.log('getAuthenticatedUser() FRONTEND_URL FROM WORKFLOW: ', process.env.FRONTEND_URL)
     try {
         const user = await UserModel.findById(req.session.userId).select("+email").exec();
         res.status(200).json(user);
