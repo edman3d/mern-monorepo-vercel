@@ -19,39 +19,37 @@ jobs:
       - name: 🧭 Checkout repo
         uses: actions/checkout@v4
 
-      # ---------------- FRONTEND PREVIEW DEPLOY ----------------
-      - name: 🚀 Deploy frontend first (preview URL)
-        working-directory: frontend
-        id: frontend
-        run: |
-          npm install -g vercel@latest
-          npm install
-          FRONTEND_URL=$(vercel deploy --yes --token=$VERCEL_TOKEN --confirm --cwd . | tail -n1)
-          echo "frontend_url=$FRONTEND_URL" >> $GITHUB_ENV
-          echo "Frontend preview URL: $FRONTEND_URL"
-
-      # ---------------- BACKEND PREVIEW DEPLOY ----------------
-      - name: 🚀 Deploy backend with frontend URL
+      # ---------------- BACKEND DEPLOY ----------------
+      - name: 🚀 Deploy backend (runtime frontend URL optional)
         working-directory: backend
         id: backend
         run: |
           npm install -g vercel@latest
           npm install
-          # Inject frontend URL as runtime env for backend
-          BACKEND_URL=$(vercel deploy --yes --token=$VERCEL_TOKEN --confirm --env FRONTEND_URL=${{ env.frontend_url }} --cwd . | tail -n1)
+          # You can optionally leave FRONTEND_URL empty or set a placeholder
+          BACKEND_URL=$(vercel deploy --yes --token=$VERCEL_TOKEN --confirm --cwd . | tail -n1)
           echo "backend_url=$BACKEND_URL" >> $GITHUB_ENV
           echo "Backend preview URL: $BACKEND_URL"
 
-      # ---------------- FRONTEND BUILD + DEPLOY WITH BACKEND ----------------
+      # ---------------- FRONTEND BUILD & DEPLOY ----------------
       - name: 🚀 Build & deploy frontend with backend URL
         working-directory: frontend
         run: |
-          # Set CRA build-time env var before build
-          export REACT_APP_BACKEND_URL=${{ env.backend_url }}
+          npm install -g vercel@latest
           npm install
+          # Set CRA build-time env var so frontend knows backend
+          export REACT_APP_BACKEND_URL=${{ env.backend_url }}
           npm run build
-          # Deploy built frontend
-          vercel deploy --yes --token=$VERCEL_TOKEN --confirm --cwd .
+          FRONTEND_URL=$(vercel deploy --yes --token=$VERCEL_TOKEN --confirm --cwd . | tail -n1)
+          echo "frontend_url=$FRONTEND_URL" >> $GITHUB_ENV
+          echo "Frontend preview URL: $FRONTEND_URL"
+
+      # ---------------- OPTIONAL: Update backend with frontend URL ----------------
+      - name: 🔄 Update backend runtime env with frontend URL
+        working-directory: backend
+        run: |
+          # Only updates backend's runtime env; does NOT rebuild backend
+          vercel env add FRONTEND_URL preview --token=$VERCEL_TOKEN --confirm <<< "${{ env.frontend_url }}"
 
       # ---------------- OPTIONAL: Comment on PR with preview URLs ----------------
       - name: 💬 Comment on PR with preview URLs
