@@ -38,8 +38,7 @@ jobs:
           npm install -g vercel@latest
           npm install
           # Set CRA build-time env var so frontend knows backend
-          export REACT_APP_BACKEND_URL=${{ env.backend_url }}
-          npm run build
+          export REACT_APP_BACKEND_URL=${{ env.backend_url }} npm run build
           FRONTEND_URL=$(vercel deploy --yes --token=$VERCEL_TOKEN --confirm --cwd . | tail -n1)
           echo "frontend_url=$FRONTEND_URL" >> $GITHUB_ENV
           echo "Frontend preview URL: $FRONTEND_URL"
