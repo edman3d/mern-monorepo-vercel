@@ -26,23 +26,20 @@ jobs:
         run: |
           npm install -g vercel@latest
           npm install
-          # Deploy backend to Vercel preview
+          # Deploy backend first
           BACKEND_URL=$(vercel deploy --yes --token=$VERCEL_TOKEN --confirm --cwd . | tail -n1)
           echo "backend_url=$BACKEND_URL" >> $GITHUB_ENV
           echo "Backend preview URL: $BACKEND_URL"
 
-      # ---------------- FRONTEND BUILD + DEPLOY ----------------
-      - name: Build CRA frontend with backend URL
+      # ---------------- FRONTEND DEPLOY ----------------
+      - name: Deploy frontend with backend URL
         working-directory: frontend
         id: frontend
         run: |
           npm install -g vercel@latest
           npm install
-          echo "Building CRA frontend with backend URL..."
-          # CRA must see REACT_APP_BACKEND_URL at build time
-          REACT_APP_BACKEND_URL=${{ env.backend_url }} npm run build
-          # Deploy the prebuilt build folder to Vercel
-          FRONTEND_URL=$(vercel deploy --prebuilt --yes --token=$VERCEL_TOKEN --confirm --cwd . | tail -n1)
+          # Deploy frontend to Vercel cloud, pass backend URL as env var
+          FRONTEND_URL=$(vercel deploy --yes --token=$VERCEL_TOKEN --confirm --cwd . --env REACT_APP_BACKEND_URL=${{ env.backend_url }} | tail -n1)
           echo "frontend_url=$FRONTEND_URL" >> $GITHUB_ENV
           echo "Frontend preview URL: $FRONTEND_URL"
 
@@ -50,7 +47,7 @@ jobs:
       - name: Update backend with frontend URL (runtime env)
         working-directory: backend
         run: |
-          # Sets FRONTEND_URL for backend serverless functions
+          # Sets FRONTEND_URL for backend runtime usage (no rebuild needed)
           vercel env add FRONTEND_URL preview --token=$VERCEL_TOKEN --confirm <<< "${{ env.frontend_url }}"
 
       # ---------------- OPTIONAL: Comment on PR ----------------
