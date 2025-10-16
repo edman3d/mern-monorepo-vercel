@@ -35,7 +35,7 @@ jobs:
         working-directory: frontend
         run: |
           # Set REACT_APP_BACKEND_URL for frontend build in Vercel preview
-          vercel link --yes --token $VERCEL_TOKEN --name frontend
+          vercel link --yes --token $VERCEL_TOKEN
           vercel env add REACT_APP_BACKEND_URL preview --token $VERCEL_TOKEN <<< "${{ env.backend_url }}"
 
       # ---------------- FRONTEND DEPLOY ----------------
