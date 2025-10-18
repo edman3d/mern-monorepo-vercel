@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import env from "./util/validateEnv";
 
+// deprecated: use connectToMongooseAndCache.ts instead
 export function mongooseConnect() {
     console.log('Connecting to Mongoose... ');
     mongoose.set("strictQuery", false); // get rid of annoying warning about upcoming change in mongoose 7

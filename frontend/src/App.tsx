@@ -11,6 +11,7 @@ import NotesPage from './pages/NotesPage';
 import NotFoundPage from './pages/NotFoundPage';
 import PrivacyPage from './pages/PrivacyPage';
 import styles from "./styles/App.module.css";
+import CivilizationsPage from './pages/CivilizationsPage';
 
 function App() {
 
@@ -49,6 +50,10 @@ function App() {
 						<Route
 							path='/privacy'
 							element={<PrivacyPage />}
+						/>
+						<Route
+							path='/civilizations'
+							element={<CivilizationsPage />}
 						/>
 						<Route
 							path='/*'
